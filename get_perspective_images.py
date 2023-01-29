@@ -57,15 +57,18 @@ class get_perspectives():
         if warped_points[:,1].max() > self.w:
             h_mat[1,2] = h_mat[1,2] - (warped_points[:,1].max() - self.w)
 
-        calib_pts = self.get_warped_points(points,h_mat)
-        per = cv2.warpPerspective(self.image,h_mat,(self.h,self.w),flags=cv2.WARP_INVERSE_MAP)
-        per = cv2.flip(per[calib_pts[:,1].min():calib_pts[:,1].max(),
-                    calib_pts[:,0].min():calib_pts[:,0].max()],0)
-        if h_flip==True:
-            per = cv2.flip(per,1)
-        # for i in calib_pts:
-        #     per = cv2.circle(per, i, 3, (255, 255, 255), 4)
-        cv2.imshow("Perspective {}".format(counter),per)
-        cv2.imwrite("Perspective {}.jpg".format(counter),per)
-        cv2.waitKey(0)
-        return h_mat
+        try:
+            calib_pts = self.get_warped_points(points,h_mat)
+            per = cv2.warpPerspective(self.image,h_mat,(self.h,self.w),flags=cv2.WARP_INVERSE_MAP)
+            per = cv2.flip(per[calib_pts[:,1].min():calib_pts[:,1].max(),
+                        calib_pts[:,0].min():calib_pts[:,0].max()],0)
+            if h_flip==True:
+                per = cv2.flip(per,1)
+            # for i in calib_pts:
+            #     per = cv2.circle(per, i, 3, (255, 255, 255), 4)
+            cv2.imshow("Perspective {}".format(counter),per)
+            cv2.imwrite("Perspective {}.jpg".format(counter),per)
+            cv2.waitKey(0)
+            return h_mat
+        except:
+            return None
